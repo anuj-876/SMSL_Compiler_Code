@@ -1,0 +1,13 @@
+state Start {
+    transition t1: event e1 -> End {
+        action a1;
+    }
+}
+
+state End {
+    action a2;
+}
+
+transitn t2: event e2 -> Start { // Lexical error: 'transitn' is not a valid keyword
+    action a3;
+}

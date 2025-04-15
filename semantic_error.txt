@@ -1,0 +1,27 @@
+start;
+
+// State S1 is defined but has no actions or transitions
+state S1 {
+}
+
+// Transition T1 references an undefined state S3
+state S2 {
+    action A1;
+    transition T1: event E1 -> S3 {
+        action A2;
+    }
+}
+
+// Transition T2 is now correctly formatted
+state S3 {
+    action A3;
+    transition T2: event E2 -> S4 {
+        action A1;
+    }
+}
+
+// State S4 is defined but has no actions or transitions
+state S4 {
+}
+
+end;
