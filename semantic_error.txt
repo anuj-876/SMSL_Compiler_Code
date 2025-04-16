@@ -12,7 +12,7 @@ state S2 {
     }
 }
 
-// Transition T2 is now correctly formatted
+// Duplicate state declaration for S3
 state S3 {
     action A3;
     transition T2: event E2 -> S4 {
@@ -20,8 +20,23 @@ state S3 {
     }
 }
 
-// State S4 is defined but has no actions or transitions
-state S4 {
+state S3 { // Duplicate declaration
+    action A4;
 }
+
+// Circular dependency between S4 and S5
+state S4 {
+    transition T3: event E3 -> S5 {
+        action A5;
+    }
+}
+
+state S5 {
+    transition T4: event E4 -> S4 {
+        action A6;
+    }
+}
+
+
 
 end;

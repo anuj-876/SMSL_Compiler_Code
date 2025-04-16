@@ -169,6 +169,7 @@ public class LexicalAnalyzer {
         Set<String> definedStates = new HashSet<>();
         Set<String> referencedStates = new HashSet<>();
         Map<String, Boolean> stateHasContent = new HashMap<>();
+        Map<String, Integer> stateLineMap = new HashMap<>(); // Track line numbers for states
 
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i).split("//")[0].trim(); // Ignore comments
@@ -180,6 +181,7 @@ public class LexicalAnalyzer {
                 String stateName = line.split("\\s+")[1];
                 definedStates.add(stateName);
                 stateHasContent.put(stateName, false); // Initialize state content check
+                stateLineMap.put(stateName, i + 1); // Store the line number for the state
             } else if (line.startsWith("transition")) {
                 String[] parts = line.split("\\s*:\\s*|\\s*->\\s*");
                 if (parts.length < 3) {
@@ -207,7 +209,8 @@ public class LexicalAnalyzer {
         // Check for states with no actions or transitions
         for (Map.Entry<String, Boolean> entry : stateHasContent.entrySet()) {
             if (!entry.getValue()) {
-                semanticErrors.add("Semantic Error: State " + entry.getKey() + " has no actions or transitions.");
+                int lineNumber = stateLineMap.get(entry.getKey()); // Retrieve the line number from stateLineMap
+                semanticErrors.add("Semantic Error: Line " + lineNumber);
             }
         }
     }
@@ -285,18 +288,20 @@ public class LexicalAnalyzer {
     }
 
     public static void displayErrors() {
-        if (!lexicalErrors.isEmpty()) {
-            System.out.println(RED + "\nLexical Errors:" + RESET);
-            lexicalErrors.forEach(error -> System.out.println(RED + error + RESET));
-        }
-
         if (!semanticErrors.isEmpty()) {
             System.out.println(RED + "\nSemantic Errors:" + RESET);
-            semanticErrors.forEach(error -> System.out.println(RED + error + RESET));
-        }
 
-        if (lexicalErrors.isEmpty() && syntaxErrors.isEmpty() && semanticErrors.isEmpty()) {
-            System.out.println(GREEN + "\nNo errors found. Compilation successful!" + RESET);
+            // Sort semantic errors by line number
+            semanticErrors.sort((a, b) -> {
+                int lineA = Integer.parseInt(a.replaceAll(".*Line (\\d+).*", "$1"));
+                int lineB = Integer.parseInt(b.replaceAll(".*Line (\\d+).*", "$1"));
+                return Integer.compare(lineA, lineB);
+            });
+
+            // Display sorted errors
+            semanticErrors.forEach(error -> System.out.println(RED + error + RESET));
+        } else {
+            System.out.println(GREEN + "\nNo semantic errors found." + RESET);
         }
     }
 
