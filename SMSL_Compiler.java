@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
-public class LexicalAnalyzer {
+public class SMSL_Compiler {
     public static final String RESET = "\u001B[0m";
     public static final String CYAN = "\u001B[36m";
     public static final String MAGENTA = "\u001B[35m";
@@ -243,7 +243,6 @@ public class LexicalAnalyzer {
     }
 
     public static void optimizeCode(List<String[]> quadruples) {
-        // Remove duplicate consecutive actions
         for (int i = 0; i < quadruples.size() - 1; i++) {
             String[] current = quadruples.get(i);
             String[] next = quadruples.get(i + 1);
