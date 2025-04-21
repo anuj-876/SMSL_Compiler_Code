@@ -1,32 +1,18 @@
 start;
 
-// State S1 with an action and a transition
 state S1 {
     action A1;
-    transition T1: event E1 -> S2 {
-        action A2;
-    }
+    action A2;
+    action A1; // Duplicate action (for Common Subexpression Elimination)
 }
-
-// State S2 with an action and a transition
 state S2 {
     action A3;
-    transition T2: event E2 -> S3 {
-        action A1;
-    }
 }
-
-// State S3 with an action and a transition
-state S3 {
-    action A4;
-    transition T3: event E3 -> S4 {
-        action A2;
-    }
+transition T1: event E1 -> S2 {
 }
-
-// State S4 with an action
-state S4 {
-    action A5;
+transition T2: event E1 -> S2 { // Duplicate transition (for Transition Merging)
+}
+transition T3: event E2 -> S1 {
 }
 
 end;
